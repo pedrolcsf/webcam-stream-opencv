@@ -16,10 +16,16 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'))
 });
 
+io.on('connection', (socket) => {
+  socket.on('chat message', msg => {
+    io.emit('chat message', msg);
+  });
+});
+
 setInterval(() => {
   const frame = wCap.read();
   const image = cv.imencode('.jpg', frame).toString('base64')
   io.emit('image', image)
-}, 500)
+}, 100)
 
-server.listen(3000);
+server.listen(3001);
